@@ -34,17 +34,19 @@ import os, sys, json, time, ast, datetime, binascii, asyncio, platform, shlex, i
 import tkinter.ttk as ttk
 from tkinter import Tk, filedialog, messagebox, VERTICAL, TRUE, FALSE, Text, Listbox, Canvas, Frame, Menu, PhotoImage, NW, YES, NO, BOTH, LEFT, RIGHT, END, TOP, BOTTOM, Y, X, Toplevel, IntVar, StringVar, TclError, StringVar
 
+
 async def run_tk(root, interval=0.01):
     """
     Run a tkinter app in an asyncio event loop.
     """
     try:
-        while True:
+        while root.winfo_exists():  # Window not closed
             root.update()
             await asyncio.sleep(interval)
     except TclError as e:
         if "application has been destroyed" not in e.args[0]:
             raise
+
 
 class Window(Frame):
     def __init__(self, master=None):
@@ -1354,8 +1356,10 @@ class VerticalScrolledFrame(Frame):
                 canvas.itemconfigure(interior_id, width=canvas.winfo_width())
         canvas.bind('<Configure>', _configure_canvas)        
 
+
 async def main():
     await run_tk(root)
+
 
 def on_closing():
     """ closes the main window and kills the proces / task """
@@ -1363,9 +1367,11 @@ def on_closing():
     if messagebox.askokcancel("Exit PEA", "Do you want to quit?"):
         root.destroy()
 
+
 root = Tk()
 root.resizable(width=False, height=False)
 root.wm_attributes('-topmost', 0)
+root.protocol("WM_DELETE_WINDOW", on_closing)  # Trigger on plain closing the window
 root.call("wm", "iconphoto", root._w, PhotoImage(file="assets/icon.png"))    
 app = Window(root)
 

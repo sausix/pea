@@ -14,11 +14,11 @@ def rxscript(conn, rx):
     try:
         OutData = str()
         
-        relayOn = re.search(b'(\d)\*1O', bytes(rx))
-        relayOff = re.search(b'(\d)\*0O', bytes(rx))
-        relayStatus = re.search(b'(\d)O', bytes(rx))
-        setVerboseMode = re.search(b'w3cv\|', bytes(rx))
-        inputStatus = re.search(b'([1-4])(\])', bytes(rx))
+        relayOn = re.search(br'(\d)+\*1O', bytes(rx))
+        relayOff = re.search(br'(\d)+\*0O', bytes(rx))
+        relayStatus = re.search(br'(\d)+O', bytes(rx))
+        setVerboseMode = re.search(br'w3cv\|', bytes(rx), re.IGNORECASE)  # Manual is upper case!
+        inputStatus = re.search(br'([1-4])]', bytes(rx))  # Manual is wrong in Ascii view: X1←
         
         
         if relayOn:

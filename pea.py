@@ -32,7 +32,7 @@
 
 import os, sys, json, time, ast, datetime, binascii, asyncio, platform, shlex, importlib
 import tkinter.ttk as ttk
-from tkinter import Tk, filedialog, messagebox, VERTICAL, TRUE, FALSE, Text, Listbox, Canvas, Frame, Menu, PhotoImage, NW, YES, NO, BOTH, LEFT, RIGHT, END, TOP, BOTTOM, Y, X, Toplevel, IntVar, StringVar, TclError, StringVar
+from tkinter import Tk, filedialog, messagebox, VERTICAL, TRUE, FALSE, Text, Canvas, Frame, Menu, PhotoImage, NW, YES, BOTH, LEFT, RIGHT, END, TOP, BOTTOM, Y, X, Toplevel, IntVar, TclError, StringVar
 
 
 async def run_tk(root, interval=0.01):
@@ -282,7 +282,7 @@ class Window(Frame):
         self.terminalbox = Text(mainframe4, width=127, height=31)
         self.terminalbox.config(font=("consolas", 10), undo=True, wrap="word")
         self.terminalbox.grid(row=0, column=0, sticky="nsew", padx=2, pady=2)
-        self.terminalbox.bind("<Button-3>", self.rClicker, add="")
+        self.terminalbox.bind("<ButtonRelease-3>", self.rClicker, add="")
 
         terminalscrollb = ttk.Scrollbar(mainframe4, command=self.terminalbox.yview)
         terminalscrollb.grid(row=0, column=1, sticky="nsew")
@@ -301,7 +301,7 @@ class Window(Frame):
             fileToEdit = "{}/{}.py".format(self.path, self.scriptName)
             if os.path.isfile(fileToEdit) :
                 runningOn = platform.system()
-                if runningOn == 'Darwen':
+                if runningOn == 'Darwin':
                     os.system("open " + shlex.quote(fileToEdit))
                 elif runningOn == 'Windows':
                     os.system("start " + fileToEdit)
@@ -560,21 +560,21 @@ class Window(Frame):
 
         try:
 
-            def rClick_All(e, apnd=0):
+            def rClick_All(apnd=0):
                 e.widget.event_generate("<Control-a>")
 
-            def rClick_Copy(e, apnd=0):
+            def rClick_Copy(apnd=0):
                 e.widget.event_generate("<Control-c>")
 
-            def rClick_Cut(e):
+            def rClick_Cut():
                 e.widget.event_generate("<Control-x>")
 
             e.widget.focus()
 
             nclst = [
-                (" Select All", lambda e=e: rClick_All(e)),
-                (" Cut", lambda e=e: rClick_Cut(e)),
-                (" Copy", lambda e=e: rClick_Copy(e)),
+                (" Select All", rClick_All),
+                (" Cut", rClick_Cut),
+                (" Copy", rClick_Copy),
             ]
 
             rmenu = Menu(None, tearoff=0, takefocus=0)
@@ -587,7 +587,7 @@ class Window(Frame):
             print(" - rClick menu, something wrong")
         return "break"
 
-    def rClickbinder(self, r):
+    def rClickbinder(self, r):  # TODO: unused function
         """ binder for the right click menu """
 
         try:
